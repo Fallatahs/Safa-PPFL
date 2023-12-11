@@ -12,7 +12,7 @@ import copy
 import numpy as np
 from torchvision import datasets, transforms
 import torch
-# from torch.utils.tensorboard import SummaryWriter
+import time
 
 from binarytree import build, Node, tree
 from utils.sampling import mnist_iid, mnist_noniid, cifar_iid
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     # parse args
     args = args_parser()
     args.device = torch.device('cpu')
-    # writer = SummaryWriter()
+    start_time = time.time()
 
 
 
@@ -301,6 +301,10 @@ if __name__ == '__main__':
         print("*************")
         loss_train.append(tree_loss_avg)
         # print("in iter len loss_train.append", len(loss_train))
+    
+    end_time = time.time()
+    training_time = end_time - start_time
+    print(f"Total training time: {training_time} seconds")
 
     lossfile = open('./log/lostfile_{}_{}_{}_iid{}_tree.dat'.format(args.dataset, args.model, args.epochs, args.iid), "w")
 
