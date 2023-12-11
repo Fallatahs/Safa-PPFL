@@ -10,7 +10,7 @@ import copy
 import numpy as np
 from torchvision import datasets, transforms
 import torch
-
+import time
 
 from utils.sampling import mnist_iid, mnist_noniid, cifar_iid
 from utils.options import args_parser
@@ -25,6 +25,7 @@ if __name__ == '__main__':
     # parse args
     args = args_parser()
     args.device = torch.device('cpu')
+    start_time = time.time()
 
     # load dataset and split users
     if args.dataset == 'mnist':
@@ -127,6 +128,9 @@ if __name__ == '__main__':
         loss_train.append(loss_avg)
 
     # save data to file loss.dat
+    end_time = time.time()
+    training_time = end_time - start_time
+    print(f"Total training time: {training_time} seconds")
 
     lossfile = open('./log/lostfile_{}_{}_{}_iid{}_serial.dat'.format(args.dataset, args.model, args.epochs, args.iid), "w")
 
