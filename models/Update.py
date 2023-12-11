@@ -10,6 +10,7 @@ import random
 from sklearn import metrics
 
 
+
 class DatasetSplit(Dataset):
     def __init__(self, dataset, idxs):
         self.dataset = dataset
@@ -24,11 +25,14 @@ class DatasetSplit(Dataset):
 
 
 class LocalUpdate(object):
-    def __init__(self, args, dataset=None, idxs=None):
+    def __init__(self, args, dataset=None, idxs=None, client_id=None):#safa added client id
+        
+        # print(f"Initializing LocalUpdate for client {args.client_id}")#safa
         self.args = args
         self.loss_func = nn.CrossEntropyLoss()
         self.selected_clients = []
         self.ldr_train = DataLoader(DatasetSplit(dataset, idxs), batch_size=self.args.local_bs, shuffle=True)
+        self.client_id = client_id  # safa client id
 
     def train(self, net):
         net.train()
@@ -46,9 +50,15 @@ class LocalUpdate(object):
                 loss.backward()
                 optimizer.step()
                 if self.args.verbose and batch_idx % 10 == 0:
-                    print('Update Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
-                        iter, batch_idx * len(images), len(self.ldr_train.dataset),
-                               100. * batch_idx / len(self.ldr_train), loss.item()))
+                    # print(f'Client {self.client_id}: Update Epoch: {iter} [{batch_idx * len(images)}/{len(self.ldr_train.dataset)}'
+                    #       f'({100. * batch_idx / len(self.ldr_train):.0f}%)]\tLoss: {loss.item():.6f}')
+
+                    print('Client {} - Update Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                        self.client_id, iter, batch_idx * len(images), len(self.ldr_train.dataset),
+                        100. * batch_idx / len(self.ldr_train), loss.item()))
+                    # print('Update Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
+                    #     iter, batch_idx * len(images), len(self.ldr_train.dataset),
+                    #            100. * batch_idx / len(self.ldr_train), loss.item()))
                 batch_loss.append(loss.item())
             epoch_loss.append(sum(batch_loss)/len(batch_loss))
         return net.state_dict(), sum(epoch_loss) / len(epoch_loss)
