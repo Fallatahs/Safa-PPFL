@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Python version: 3.6
 
-# workiing_\tree3 same format as main_fed_serial 
+# same format as chain with reaclling previously trained nodes
 
 import os
 import matplotlib
