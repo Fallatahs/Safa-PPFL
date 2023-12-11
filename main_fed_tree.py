@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Python version: 3.6
 
-# workiing_\tree3 same format as main_fed_serial - retraining dublicated nodes 
+# tree in the format of a multiple chains - retraining duplicated nodes in dif paths 
 
 import os
 import matplotlib
